@@ -7,6 +7,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Home from './Home';
 import Contact from './Contact';
+import About from './About';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { COMMENTS } from '../shared/comments';
 import { PROMOTIONS } from '../shared/promotions';
@@ -37,6 +38,10 @@ class Main extends Component {
 				/>
 			);
 		};
+		const AboutPage = () => {
+			return <About leaders={this.state.leaders} />;
+		};
+
 		const DishWithId = ({ match }) => {
 			return (
 				<DishDetail
@@ -59,6 +64,7 @@ class Main extends Component {
 					<Route path="/menu/:dishId" component={DishWithId} />
 					<Route exact path="/contactus" component={Contact} />} />
 					<Route path="/home" component={HomePage} />
+					<Route path="/aboutus" component={AboutPage} />
 					<Route exact path="/menu" component={() => <Menu dishes={this.state.dishes} />} />
 					<Redirect to="/home" />
 				</Switch>
