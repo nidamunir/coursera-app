@@ -45,10 +45,11 @@ class CommentForm extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 	handleSubmit(values) {
-		//event.preventDefault();
-		this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+		console.log('Current State is: ' + JSON.stringify(values));
+		alert('Current State is: ' + JSON.stringify(values));
+		this.props.resetFeedbackForm();
+		// event.preventDefault();
 	}
-
 	validate(author) {
 		const errors = {
 			author: '',
@@ -110,7 +111,7 @@ class CommentForm extends Component {
 					<Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
 						<ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
 						<ModalBody>
-							<LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+							<Form model="feedback" onSubmit={(values) => this.handleSubmit(values)}>
 								<Row className="form-group">
 									<Label htmlFor="rating" md={2}>
 										Rating
@@ -188,7 +189,7 @@ class CommentForm extends Component {
 								<Button outline onClick={this.handleSubmit}>
 									<span className="fa fa-sign-in fa-lg" /> Submit comment
 								</Button>
-							</LocalForm>
+							</Form>
 						</ModalBody>
 					</Modal>{' '}
 				</React.Fragment>

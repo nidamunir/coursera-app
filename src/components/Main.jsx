@@ -15,6 +15,7 @@ import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { actions } from 'react-redux-form';
 const mapStateToProps = (state) => {
 	return {
 		dishes: state.dishes,
@@ -22,6 +23,9 @@ const mapStateToProps = (state) => {
 		promotions: state.promotions,
 		leaders: state.leaders
 	};
+};
+resetFeedbackForm: () => {
+	dispatch(actions.reset('feedback'));
 };
 const mapDispatchToProps = (dispatch) => ({
 	addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
@@ -87,6 +91,11 @@ class Main extends Component {
 				</Navbar>
 				<Header />
 				<Switch>
+					<Route
+						exact
+						path="/contactus"
+						component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />}
+					/>
 					<Route path="/menu/:dishId" component={DishWithId} />
 					<Route exact path="/contactus" component={Contact} />} />
 					<Route path="/home" component={HomePage} />
