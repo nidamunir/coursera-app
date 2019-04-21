@@ -18,7 +18,9 @@ import {
 	Input,
 	Label
 } from 'reactstrap';
+import { Loading } from './Loading';
 import { Link } from 'react-router-dom';
+import { addComment } from '../redux/ActionCreators';
 
 import { Control, LocalForm, Errors } from 'react-redux-form';
 
@@ -43,9 +45,7 @@ class CommentForm extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 	handleSubmit(values) {
-		console.log('Current State is: ' + JSON.stringify(values));
-		alert('Current State is: ' + JSON.stringify(values));
-		// event.preventDefault();
+		//event.preventDefault();
 		this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
 	}
 
@@ -85,89 +85,114 @@ class CommentForm extends Component {
 		const required = (val) => val && val.length;
 		const maxLength = (len) => (val) => !val || val.length <= len;
 		const minLength = (len) => (val) => val && val.length >= len;
-		return (
-			<React.Fragment>
-				<Button outline onClick={this.toggleModal}>
-					<span className="fa fa-sign-in fa-lg" /> Submit comment
-				</Button>
-				<Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-					<ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
-					<ModalBody>
-						<LocalForm onSubmit={(values) => this.handleSubmit(values)}>
-							<Row className="form-group">
-								<Label htmlFor="rating" md={2}>
-									Rating
-								</Label>
-								<Col md={10}>
-									<Control.select model=".rating" id="rating" name="rating" className="form-control">
-										{' '}
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">2</option>
-										<option value="4">4</option>
-										<option value="5">5</option>
-									</Control.select>
-								</Col>
-							</Row>{' '}
-							<Row className="form-group">
-								<Label htmlFor="author" md={2}>
-									Name
-								</Label>
-								<Col md={10}>
-									<Control.text
-										model=".author"
-										id="author"
-										name="author"
-										placeholder="Name"
-										className="form-control"
-										validators={{
-											required,
-											minLength: minLength(3),
-											maxLength: maxLength(15)
-										}}
-									/>
-									<Errors
-										className="text-danger"
-										model=".author"
-										show="touched"
-										messages={{
-											required: 'Required',
-											minLength: 'Must be greater than 3 characters',
-											maxLength: 'Must be 15 characters or less'
-										}}
-									/>
-								</Col>
-							</Row>
-							<Row className="form-group">
-								<Label htmlFor="author" md={2}>
-									Comment
-								</Label>
-								<Col md={10}>
-									<Control.textarea
-										model=".comment"
-										id="comment"
-										name="comment"
-										placeholder="Name"
-										className="form-control"
-										validators={{
-											required
-										}}
-									/>
-									<Errors
-										className="text-danger"
-										model=".comment"
-										show="touched"
-										messages={{
-											required: 'Required'
-										}}
-									/>
-								</Col>
-							</Row>
-						</LocalForm>
-					</ModalBody>
-				</Modal>{' '}
-			</React.Fragment>
-		);
+		if (props.isLoading) {
+			return (
+				<div className="container">
+					<div className="row">
+						<Loading />
+					</div>
+				</div>
+			);
+		} else if (props.errMess) {
+			return (
+				<div className="container">
+					<div className="row">
+						<h4>{props.errMess}</h4>
+					</div>
+				</div>
+			);
+		} else if (props.dish != null)
+			return (
+				<React.Fragment>
+					<Button outline onClick={this.toggleModal}>
+						<span className="fa fa-sign-in fa-lg" /> Submit comment
+					</Button>
+					<Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+						<ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+						<ModalBody>
+							<LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+								<Row className="form-group">
+									<Label htmlFor="rating" md={2}>
+										Rating
+									</Label>
+									<Col md={10}>
+										<Control.select
+											model=".rating"
+											id="rating"
+											name="rating"
+											className="form-control"
+										>
+											{' '}
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">2</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+										</Control.select>
+									</Col>
+								</Row>{' '}
+								<Row className="form-group">
+									<Label htmlFor="author" md={2}>
+										Name
+									</Label>
+									<Col md={10}>
+										<Control.text
+											model=".author"
+											id="author"
+											name="author"
+											placeholder="Name"
+											className="form-control"
+											validators={{
+												required,
+												minLength: minLength(3),
+												maxLength: maxLength(15)
+											}}
+										/>
+										<Errors
+											className="text-danger"
+											model=".author"
+											show="touched"
+											messages={{
+												required: 'Required',
+												minLength: 'Must be greater than 3 characters',
+												maxLength: 'Must be 15 characters or less'
+											}}
+										/>
+									</Col>
+								</Row>
+								<Row className="form-group">
+									<Label htmlFor="author" md={2}>
+										Comment
+									</Label>
+									<Col md={10}>
+										<Control.textarea
+											model=".comment"
+											id="comment"
+											name="comment"
+											placeholder="Name"
+											className="form-control"
+											validators={{
+												required
+											}}
+										/>
+										<Errors
+											className="text-danger"
+											model=".comment"
+											show="touched"
+											messages={{
+												required: 'Required'
+											}}
+										/>
+									</Col>
+								</Row>
+								<Button outline onClick={this.handleSubmit}>
+									<span className="fa fa-sign-in fa-lg" /> Submit comment
+								</Button>
+							</LocalForm>
+						</ModalBody>
+					</Modal>{' '}
+				</React.Fragment>
+			);
 	}
 }
 
@@ -231,7 +256,7 @@ const DishDetail = (props) => {
 							addComment={props.addComment}
 							dishId={props.dish.id}
 						/>
-						<CommentForm dishId={dishId} addComment={addComment} />
+						<CommentForm dishId={props.dish.id} addComment={addComment} />
 					</div>
 				</div>
 			</div>
