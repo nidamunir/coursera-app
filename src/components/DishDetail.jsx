@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { baseUrl } from '../shared/baseUrl';
 import {
 	Card,
 	CardImg,
@@ -86,6 +87,7 @@ class CommentForm extends Component {
 		const required = (val) => val && val.length;
 		const maxLength = (len) => (val) => !val || val.length <= len;
 		const minLength = (len) => (val) => val && val.length >= len;
+		const { props } = this;
 		if (props.isLoading) {
 			return (
 				<div className="container">
@@ -201,7 +203,8 @@ function RenderDish({ dish }) {
 	if (dish != null) {
 		return (
 			<Card>
-				<CardImg width="100%" src={dish.image} alt={dish.name} />
+				<CardImg top src={baseUrl + dish.image} alt={dish.name} />
+
 				<CardBody>
 					<CardTitle>{dish.name}</CardTitle>
 					<CardText>{dish.description}</CardText>
