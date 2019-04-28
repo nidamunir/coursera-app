@@ -28,15 +28,11 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
 class CommentForm extends Component {
 	constructor(props) {
 		super(props);
-
 		this.toggleModal = this.toggleModal.bind(this);
-
 		this.state = {
 			isModalOpen: false,
 			author: '',
-
 			comment: '',
-
 			touched: {
 				author: false,
 				comment: false
@@ -46,9 +42,9 @@ class CommentForm extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 	handleSubmit(values) {
-		console.log('Current State is: ' + JSON.stringify(values));
-		alert('Current State is: ' + JSON.stringify(values));
-		this.props.resetFeedbackForm();
+		// console.log('Current State is: ' + JSON.stringify(values));
+		// alert('Current State is: ' + JSON.stringify(values));
+		// this.props.resetFeedbackForm();
 		this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
 		// event.preventDefault();
 	}
@@ -105,7 +101,8 @@ class CommentForm extends Component {
 					</div>
 				</div>
 			);
-		} else if (props.dish != null)
+		} else
+			//  if (props.dish != null)
 			return (
 				<React.Fragment>
 					<Button outline onClick={this.toggleModal}>
@@ -257,11 +254,11 @@ const DishDetail = (props) => {
 					<div className="col-12 col-md-5 m-1">
 						<RenderComments
 							comments={props.comments}
-							addComment={props.addComment}
+							// addComment={props.addComment}
 							postComment={props.postComment}
 							dishId={props.dish.id}
 						/>
-						<CommentForm dishId={dishId} postComment={postComment} />
+						<CommentForm dishId={props.dishId} postComment={props.postComment} />
 					</div>
 				</div>
 			</div>
