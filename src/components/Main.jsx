@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, NavbarBrand } from 'reactstrap';
 import Menu from './Menu';
 import DishDetail from './DishDetail';
-import { addComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators';
-
+import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators';
 import { DISHES } from '../shared/dishes';
 import Header from './Header';
 import Footer from './Footer';
@@ -38,7 +37,8 @@ const mapDispatchToProps = (dispatch) => ({
 		dispatch(actions.reset('feedback'));
 	},
 	fetchComments: () => dispatch(fetchComments()),
-	fetchPromos: () => dispatch(fetchPromos())
+	fetchPromos: () => dispatch(fetchPromos()),
+	postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment))
 });
 class Main extends Component {
 	componentDidMount() {
@@ -87,6 +87,7 @@ class Main extends Component {
 					)}
 					commentsErrMess={this.props.comments.errMess}
 					addComment={this.props.addComment}
+					postComment={this.props.postComment}
 				/>
 			);
 		};
